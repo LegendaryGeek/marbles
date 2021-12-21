@@ -1,6 +1,6 @@
 {
   "parent" : "item/generated",
   "textures" : {
-    "layer0" : "lgmables:item/marble"
+    "layer0" : "lgmarbles:item/marble"
   }
 }
