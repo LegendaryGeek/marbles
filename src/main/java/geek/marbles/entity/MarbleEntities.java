@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 /**
  * Created by Robin Seifert on 12/21/2021.
  */
-public class MableEntities
+public class MarbleEntities
 {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Marbles.ID);
 

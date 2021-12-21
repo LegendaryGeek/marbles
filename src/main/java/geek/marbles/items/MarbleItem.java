@@ -1,6 +1,6 @@
 package geek.marbles.items;
 
-import geek.marbles.entity.MableEntities;
+import geek.marbles.entity.MarbleEntities;
 import geek.marbles.entity.MarbleEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -21,7 +21,7 @@ public class MarbleItem extends Item {
   @Override
   public Entity createEntity(Level world, Entity location, ItemStack itemstack)
   {
-    final MarbleEntity entity = MableEntities.MARBLE.get().create(world);
+    final MarbleEntity entity = MarbleEntities.MARBLE.get().create(world);
     if(entity != null)
     {
       entity.setItem(itemstack);
