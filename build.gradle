@@ -114,6 +114,12 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18-38.0.4'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
