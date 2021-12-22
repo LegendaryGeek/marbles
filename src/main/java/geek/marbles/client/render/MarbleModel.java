@@ -18,7 +18,7 @@ import net.minecraft.world.entity.Entity;
 public class MarbleModel<T extends Entity> extends EntityModel<T>
 {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "marble"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("lgmarble", "marble"), "main");
 	private final ModelPart bb_main;
 
 	public MarbleModel(ModelPart root) {
