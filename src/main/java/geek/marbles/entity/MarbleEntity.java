@@ -35,7 +35,7 @@ public class MarbleEntity extends ItemEntity
     @Override
     public boolean isPickable()
     {
-        return false; //TODO enable for interaction
+        return true;
     }
 
     @Override

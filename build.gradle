@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT' //https://github.com/SpongePowered/MixinGradle
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -89,12 +89,17 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor' //https://github.com/SpongePowered/Mixin
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 mixin {
     add sourceSets.main, "lgmarbles.general.mixin-refmap.json"
+    //config 'mixen.lgmarbles.json'
+
+    //debug.verbose = true
+    //debug.export = true
+    dumpTargetOnFailure = true
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
