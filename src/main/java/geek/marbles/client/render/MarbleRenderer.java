@@ -27,8 +27,14 @@ public class MarbleRenderer<E extends Entity> extends EntityRenderer<E>
     @Override
     public void render(E pEntity, float pEntityYaw, float pPartialTicks, PoseStack stack, MultiBufferSource pBuffer, int pPackedLight) {
         stack.pushPose();
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(this.getTextureLocation(pEntity)));
+
+        //Move model to slightly in the ground by a pixel
+        stack.translate(0, -1.4, 0);
+
+        //render
+        final VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(this.getTextureLocation(pEntity)));
         this.model.renderToBuffer(stack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+
         stack.popPose();
     }
 
