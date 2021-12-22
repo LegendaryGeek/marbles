@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "geek.marbles.mixens",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "ItemAttackDisconnectMixen"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "lgmarbles.general.mixin-refmap.json"
+}

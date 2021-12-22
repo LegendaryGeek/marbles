@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class MarbleEntity extends ItemEntity
 {
@@ -25,37 +26,46 @@ public class MarbleEntity extends ItemEntity
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean canBeCollidedWith()
+    {
+        return true;
+    }
+
+
+    @Override
+    public boolean isPickable()
+    {
+        return false; //TODO enable for interaction
+    }
+
+    @Override
+    public boolean isPushable()
+    {
         return true;
     }
 
     @Override
-    public boolean isPickable() {
-        return true;
-    }
-
-    @Override
-    public InteractionResult interact(Player player, InteractionHand hand)
+    public InteractionResult interactAt(Player player, Vec3 position, InteractionHand hand)
     {
         //Push
         if (!player.isSecondaryUseActive())
         {
-            float power = (float)player.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+            float power = (float) player.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
             this.push(
-                    -Mth.sin(this.getYRot() * ((float)Math.PI / 180F)) * power * 0.5F,
+                    -Mth.sin(this.getYRot() * ((float) Math.PI / 180F)) * power * 0.5F,
                     0.1D,
-                    Mth.cos(this.getYRot() * ((float)Math.PI / 180F)) * power * 0.5F);
+                    Mth.cos(this.getYRot() * ((float) Math.PI / 180F)) * power * 0.5F);
 
             return InteractionResult.CONSUME;
         }
         //Pickup into inventory
-        else if(player.getItemInHand(hand).isEmpty())
+        else if (player.getItemInHand(hand).isEmpty())
         {
             super.playerTouch(player);
             return InteractionResult.CONSUME;
         }
         //TODO pickup using a bag
-        return InteractionResult.PASS;
+        return InteractionResult.CONSUME;
     }
 
     @Override
