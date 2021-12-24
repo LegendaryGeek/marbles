@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,12 +22,13 @@ public class ItemAttackDisconnectMixen
     ServerPlayer player;
 
     @Inject(at = @At("HEAD"), method = "handleInteract", cancellable = true)
-    private void handleInteract(@NotNull ServerboundInteractPacket serverboundInteractPacket, CallbackInfo info)
+    private void handleInteract(ServerboundInteractPacket serverboundInteractPacket, CallbackInfo info)
     {
         ServerLevel serverlevel = player.getLevel();
         final Entity entity = serverboundInteractPacket.getTarget(serverlevel);
 
-        if(entity instanceof MarbleEntity) {
+        if(entity instanceof MarbleEntity && serverboundInteractPacket.action.getType() == ServerboundInteractPacket.ActionType.ATTACK) {
+            ((MarbleEntity)entity).push(player);
             info.cancel();
         }
     }
