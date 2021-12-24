@@ -63,7 +63,7 @@ public class MarbleEntity extends ItemEntity
                 final Block block = blockState.getBlock();
 
                 //Get friction value
-                frictionPercent = blockState.getFriction(level, blockPosUnder, this) * 0.98F; //Most blocks are 0.6F & ice is 0.98
+                frictionPercent = (float) Math.min(0.989, blockState.getFriction(level, blockPosUnder, this) + 0.3); //Most blocks are 0.6F & ice is 0.98
 
                 //Stair gravity logic
                 if(block instanceof StairBlock && blockState.hasProperty(StairBlock.HALF) && blockState.hasProperty(StairBlock.FACING)) {
