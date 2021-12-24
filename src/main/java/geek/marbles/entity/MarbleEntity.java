@@ -160,7 +160,7 @@ public class MarbleEntity extends ItemEntity
                 final double speed = Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 
                 //Apply energy over collisions
-                final double transferPercent = (1.0 / (list.size() + 1.0)) * 0.95f;
+                final double transferPercent = (1.0 / list.size()) * 0.95f;
                 final double transferAmount = speed * transferPercent;
                 list.forEach(entity -> {
                     final Vec3 deltaPos = entity.position().subtract(position());
@@ -168,33 +168,31 @@ public class MarbleEntity extends ItemEntity
                 });
 
                 //Invert self with some energy to create a bounce like effect TODO only do at high speed (low speed would stop)
-                setDeltaMovement(deltaMovement.multiply(-transferPercent, 1, -transferPercent));
+                deltaMovement = deltaMovement.multiply(-transferPercent, 1, -transferPercent);
             }
-            else
+
+            //Bounce off floor
+            if (preVerticalCollision != this.verticalCollision && onGround != prevGround)
             {
-                //Bounce off floor
-                if (preVerticalCollision != this.verticalCollision && onGround != prevGround)
+                final double bounceEnergyPercent = 0.5;
+                this.setDeltaMovement(deltaMovement.multiply(1, -bounceEnergyPercent, 1));
+            }
+
+            if (preHorizontalCollision != this.horizontalCollision)
+            {
+                final Vec3 offsetFromCollision = this.position().subtract(prevPosition);
+                final boolean collidedX = !Mth.equal(vec.x, offsetFromCollision.x);
+                final boolean collidedZ = !Mth.equal(vec.z, offsetFromCollision.z);
+
+                final double bounceEnergyPercent = 0.9;
+
+                if (collidedZ)
                 {
-                    final double bounceEnergyPercent = 0.5;
-                    this.setDeltaMovement(deltaMovement.multiply(1, -bounceEnergyPercent, 1));
+                    this.setDeltaMovement(deltaMovement.multiply(1, 1, -bounceEnergyPercent));
                 }
-
-                if (preHorizontalCollision != this.horizontalCollision)
+                else if (collidedX)
                 {
-                    final Vec3 offsetFromCollision = this.position().subtract(prevPosition);
-                    final boolean collidedX = !Mth.equal(vec.x, offsetFromCollision.x);
-                    final boolean collidedZ = !Mth.equal(vec.z, offsetFromCollision.z);
-
-                    final double bounceEnergyPercent = 0.9;
-
-                    if (collidedZ)
-                    {
-                        this.setDeltaMovement(deltaMovement.multiply(1, 1, -bounceEnergyPercent));
-                    }
-                    else if (collidedX)
-                    {
-                        this.setDeltaMovement(deltaMovement.multiply(-bounceEnergyPercent, 1, 1));
-                    }
+                    this.setDeltaMovement(deltaMovement.multiply(-bounceEnergyPercent, 1, 1));
                 }
             }
         }
