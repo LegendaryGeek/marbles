@@ -58,7 +58,7 @@ public class MarbleEntity extends ItemEntity
             //Block interaction
             if (this.onGround)
             {
-                final BlockPos blockPosUnder = new BlockPos(this.getX(), this.getY() - 1.0D, this.getZ());
+                final BlockPos blockPosUnder = new BlockPos(this.getX(), Math.ceil(this.getY()) - 1.0D, this.getZ());
                 final BlockState blockState = this.level.getBlockState(blockPosUnder);
                 final Block block = blockState.getBlock();
 
