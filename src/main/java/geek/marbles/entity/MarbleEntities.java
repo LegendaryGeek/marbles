@@ -15,5 +15,5 @@ public class MarbleEntities
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Marbles.ID);
 
     public static final RegistryObject<EntityType<MarbleEntity>> MARBLE = ENTITIES.register("marble",
-            () -> EntityType.Builder.<MarbleEntity>of(MarbleEntity::new, MobCategory.MISC).sized(0.3F, 0.3F).clientTrackingRange(64).build("marble"));
+            () -> EntityType.Builder.<MarbleEntity>of(MarbleEntity::new, MobCategory.MISC).sized(0.1F, 0.1F).clientTrackingRange(64).build("marble"));
 }

@@ -3,6 +3,9 @@ package geek.marbles.entity;
 import geek.marbles.items.MarbleItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +16,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.StairBlock;
@@ -26,11 +30,23 @@ import java.util.function.Predicate;
 
 public class MarbleEntity extends ItemEntity
 {
+    private static final MarbleColor DEFAULT_COLOR_A = new MarbleColor(0, 255, 0);
+    private static final MarbleColor DEFAULT_COLOR_B = new MarbleColor(255, 0, 0);
+    private static final EntityDataAccessor<MarbleColor> COLOR_A = SynchedEntityData.defineId(MarbleEntity.class, MarbleColor.ENTITY_DATA_SYNC);
+    private static final EntityDataAccessor<MarbleColor> COLOR_B = SynchedEntityData.defineId(MarbleEntity.class, MarbleColor.ENTITY_DATA_SYNC);
+
     public MarbleEntity(EntityType<? extends MarbleEntity> entityType, Level level)
     {
         super(entityType, level);
         this.blocksBuilding = true;
         this.setUnlimitedLifetime(); //prevent despawning
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.getEntityData().define(COLOR_A, DEFAULT_COLOR_A);
+        this.getEntityData().define(COLOR_B, DEFAULT_COLOR_B);
     }
 
     @Override
@@ -231,5 +247,46 @@ public class MarbleEntity extends ItemEntity
     public ItemEntity copy()
     {
         return (ItemEntity) MarbleItems.MARBLE.get().createEntity(getLevel(), this, getItem());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag data) {
+        super.readAdditionalSaveData(data);
+        if(data.contains("color_a", 10))
+        {
+            final CompoundTag colorData = data.getCompound("color_a");
+            entityData.set(COLOR_A, new MarbleColor(colorData.getByte("r"), colorData.getByte("g"), colorData.getByte("b")));
+        }
+        if(data.contains("color_b", 10))
+        {
+            final CompoundTag colorData = data.getCompound("color_b");
+            entityData.set(COLOR_B, new MarbleColor(colorData.getByte("r"), colorData.getByte("g"), colorData.getByte("b")));
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag data) {
+        super.addAdditionalSaveData(data);
+
+        final CompoundTag colorDataA = new CompoundTag();
+
+        final MarbleColor colorA = entityData.get(COLOR_A);
+        colorDataA.putByte("r", colorA.red);
+        colorDataA.putByte("g", colorA.green);
+        colorDataA.putByte("b", colorA.blue);
+        data.put("color_a", colorDataA);
+
+        final CompoundTag colorDataB = new CompoundTag();
+
+        final MarbleColor colorB = entityData.get(COLOR_B);
+        colorDataB.putByte("r", colorB.red);
+        colorDataB.putByte("g", colorB.green);
+        colorDataB.putByte("b", colorB.blue);
+        data.put("color_b", colorDataB);
+    }
+
+    @Override
+    public ItemStack getPickResult() {
+        return getItem().copy();
     }
 }

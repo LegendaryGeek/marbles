@@ -28,6 +28,9 @@ public class MarbleRenderer<E extends Entity> extends EntityRenderer<E>
     public void render(E pEntity, float pEntityYaw, float pPartialTicks, PoseStack stack, MultiBufferSource pBuffer, int pPackedLight) {
         stack.pushPose();
 
+        //Scale down
+        stack.scale(0.5f, 0.5f, 0.5f);
+
         //Move model to slightly in the ground by a pixel
         stack.translate(0, -1.4, 0);
 
