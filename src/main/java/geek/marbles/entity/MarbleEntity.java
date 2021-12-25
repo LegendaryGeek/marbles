@@ -54,6 +54,11 @@ public class MarbleEntity extends ItemEntity
     {
         this.baseTick();
 
+        if(tickCount == 1) { //TODO move to crafting
+            entityData.set(COLOR_A, MarbleColor.randomColor(level.random));
+            entityData.set(COLOR_B, MarbleColor.randomColor(level.random));
+        }
+
         final Vec3 vec3 = this.getDeltaMovement();
 
         //Gravity logic
@@ -288,5 +293,13 @@ public class MarbleEntity extends ItemEntity
     @Override
     public ItemStack getPickResult() {
         return getItem().copy();
+    }
+
+    public MarbleColor getColorA() {
+        return entityData.get(COLOR_A);
+    }
+
+    public MarbleColor getColorB() {
+        return entityData.get(COLOR_B);
     }
 }

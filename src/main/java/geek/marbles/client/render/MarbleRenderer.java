@@ -36,7 +36,7 @@ public class MarbleRenderer<E extends Entity> extends EntityRenderer<E>
 
         //render
         final VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(this.getTextureLocation(pEntity)));
-        this.model.renderToBuffer(stack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.model.renderToBuffer(pEntity, stack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
 
         stack.popPose();
     }
