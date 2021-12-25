@@ -57,8 +57,8 @@ public class MarbleModel<T extends Entity> extends EntityModel<T>
     {
         if (entity instanceof MarbleEntity marble)
         {
-            final MarbleColor colorB = marble.getColorB();
-            body.render(poseStack, buffer, packedLight, packedOverlay, colorB.red / 255f, colorB.green / 255f, colorB.blue / 255f, 1f);
+            final MarbleColor colorGlass = marble.getColorGlass();
+            body.render(poseStack, buffer, packedLight, packedOverlay, colorGlass.red / 255f, colorGlass.green / 255f, colorGlass.blue / 255f, 1f);
         }
         else
         {
@@ -67,8 +67,23 @@ public class MarbleModel<T extends Entity> extends EntityModel<T>
 
         if (entity instanceof MarbleEntity marble)
         {
+            //Render A
             final MarbleColor colorA = marble.getColorA();
+            center_star.getChild("star_2_r1").visible = false;
+            center_star.getChild("star_1_r1").visible = true;
             center_star.render(poseStack, buffer, packedLight, packedOverlay, colorA.red / 255f, colorA.green / 255f, colorA.blue / 255f, 1f);
+
+
+            //Render B
+            final MarbleColor colorB = marble.getColorB();
+            center_star.getChild("star_2_r1").visible = true;
+            center_star.getChild("star_1_r1").visible = false;
+            center_star.render(poseStack, buffer, packedLight, packedOverlay, colorB.red / 255f, colorB.green / 255f, colorB.blue / 255f, 1f);
+
+
+            //Reset
+            center_star.getChild("star_2_r1").visible = true;
+            center_star.getChild("star_1_r1").visible = true;
         }
         else
         {

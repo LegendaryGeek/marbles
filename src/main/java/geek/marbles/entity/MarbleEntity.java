@@ -26,12 +26,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class MarbleEntity extends ItemEntity
 {
+    private static final MarbleColor DEFAULT_COLOR_G = new MarbleColor(0, 0, 255);
     private static final MarbleColor DEFAULT_COLOR_A = new MarbleColor(0, 255, 0);
     private static final MarbleColor DEFAULT_COLOR_B = new MarbleColor(255, 0, 0);
+    private static final EntityDataAccessor<MarbleColor> COLOR_GLASS = SynchedEntityData.defineId(MarbleEntity.class, MarbleColor.ENTITY_DATA_SYNC);
     private static final EntityDataAccessor<MarbleColor> COLOR_A = SynchedEntityData.defineId(MarbleEntity.class, MarbleColor.ENTITY_DATA_SYNC);
     private static final EntityDataAccessor<MarbleColor> COLOR_B = SynchedEntityData.defineId(MarbleEntity.class, MarbleColor.ENTITY_DATA_SYNC);
 
@@ -45,6 +48,7 @@ public class MarbleEntity extends ItemEntity
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.getEntityData().define(COLOR_GLASS, DEFAULT_COLOR_G);
         this.getEntityData().define(COLOR_A, DEFAULT_COLOR_A);
         this.getEntityData().define(COLOR_B, DEFAULT_COLOR_B);
     }
@@ -55,6 +59,7 @@ public class MarbleEntity extends ItemEntity
         this.baseTick();
 
         if(tickCount == 1) { //TODO move to crafting
+            entityData.set(COLOR_GLASS, MarbleColor.randomColor(level.random));
             entityData.set(COLOR_A, MarbleColor.randomColor(level.random));
             entityData.set(COLOR_B, MarbleColor.randomColor(level.random));
         }
@@ -257,42 +262,45 @@ public class MarbleEntity extends ItemEntity
     @Override
     public void readAdditionalSaveData(CompoundTag data) {
         super.readAdditionalSaveData(data);
-        if(data.contains("color_a", 10))
+        readColor(data, "glass", (color) -> entityData.set(COLOR_GLASS, color));
+        readColor(data, "a", (color) -> entityData.set(COLOR_A, color));
+        readColor(data, "b", (color) -> entityData.set(COLOR_B, color));
+    }
+
+    private static void readColor(CompoundTag data, String suffix, Consumer<MarbleColor> colorConsumer)
+    {
+        final String key = "color_" + suffix;
+        if(data.contains(key, 10))
         {
-            final CompoundTag colorData = data.getCompound("color_a");
-            entityData.set(COLOR_A, new MarbleColor(colorData.getByte("r"), colorData.getByte("g"), colorData.getByte("b")));
-        }
-        if(data.contains("color_b", 10))
-        {
-            final CompoundTag colorData = data.getCompound("color_b");
-            entityData.set(COLOR_B, new MarbleColor(colorData.getByte("r"), colorData.getByte("g"), colorData.getByte("b")));
+            final CompoundTag colorData = data.getCompound(key);
+            final MarbleColor color = new MarbleColor(colorData.getByte("r"), colorData.getByte("g"), colorData.getByte("b"));
+            colorConsumer.accept(color);
         }
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag data) {
         super.addAdditionalSaveData(data);
+        data.put("color_glass", saveColor(entityData.get(COLOR_GLASS)));
+        data.put("color_a", saveColor(entityData.get(COLOR_A)));
+        data.put("color_b", saveColor(entityData.get(COLOR_B)));
+    }
 
-        final CompoundTag colorDataA = new CompoundTag();
-
-        final MarbleColor colorA = entityData.get(COLOR_A);
-        colorDataA.putByte("r", colorA.red);
-        colorDataA.putByte("g", colorA.green);
-        colorDataA.putByte("b", colorA.blue);
-        data.put("color_a", colorDataA);
-
-        final CompoundTag colorDataB = new CompoundTag();
-
-        final MarbleColor colorB = entityData.get(COLOR_B);
-        colorDataB.putByte("r", colorB.red);
-        colorDataB.putByte("g", colorB.green);
-        colorDataB.putByte("b", colorB.blue);
-        data.put("color_b", colorDataB);
+    private static CompoundTag saveColor(MarbleColor color) {
+        final CompoundTag colorData = new CompoundTag();
+        colorData.putByte("r", color.red);
+        colorData.putByte("g", color.green);
+        colorData.putByte("b", color.blue);
+        return colorData;
     }
 
     @Override
     public ItemStack getPickResult() {
         return getItem().copy();
+    }
+
+    public MarbleColor getColorGlass() {
+        return entityData.get(COLOR_GLASS);
     }
 
     public MarbleColor getColorA() {
