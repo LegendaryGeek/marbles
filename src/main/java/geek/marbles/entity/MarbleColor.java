@@ -17,14 +17,14 @@ public class MarbleColor
 
     public MarbleColor(int red, int green, int blue)
     {
-        this((byte)red, (byte)green, (byte)blue);
+        this((byte)(red & 0xFF), (byte)(green & 0xFF), (byte)(blue & 0xFF));
     }
 
     public MarbleColor(byte red, byte green, byte blue)
     {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.red = (red < 0 ? 0 : red);
+        this.green = (green < 0 ? 0 : green);
+        this.blue = (blue < 0 ? 0 : blue);
     }
 
     public MarbleColor(int rgb) {
@@ -44,7 +44,7 @@ public class MarbleColor
         //to get rainbow, pastel colors https://stackoverflow.com/questions/4246351/creating-random-colour-in-java
         final float hue = random.nextFloat();
         final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
-        final float luminance = 0.5f; //1.0 for brighter, 0.0 for black
+        final float luminance = 0.8f; //1.0 for brighter, 0.0 for black
         return HSBtoRGB(hue, saturation, luminance);
     }
 
@@ -61,37 +61,38 @@ public class MarbleColor
             float p = brightness * (1.0f - saturation);
             float q = brightness * (1.0f - saturation * f);
             float t = brightness * (1.0f - (saturation * (1.0f - f)));
-            switch ((int) h) {
-                case 0:
+            switch ((int) h)
+            {
+                case 0 -> {
                     r = (byte) (brightness * 255.0f + 0.5f);
                     g = (byte) (t * 255.0f + 0.5f);
                     b = (byte) (p * 255.0f + 0.5f);
-                    break;
-                case 1:
+                }
+                case 1 -> {
                     r = (byte) (q * 255.0f + 0.5f);
                     g = (byte) (brightness * 255.0f + 0.5f);
                     b = (byte) (p * 255.0f + 0.5f);
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     r = (byte) (p * 255.0f + 0.5f);
                     g = (byte) (brightness * 255.0f + 0.5f);
                     b = (byte) (t * 255.0f + 0.5f);
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     r = (byte) (p * 255.0f + 0.5f);
                     g = (byte) (q * 255.0f + 0.5f);
                     b = (byte) (brightness * 255.0f + 0.5f);
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     r = (byte) (t * 255.0f + 0.5f);
                     g = (byte) (p * 255.0f + 0.5f);
                     b = (byte) (brightness * 255.0f + 0.5f);
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     r = (byte) (brightness * 255.0f + 0.5f);
                     g = (byte) (p * 255.0f + 0.5f);
                     b = (byte) (q * 255.0f + 0.5f);
-                    break;
+                }
             }
         }
         return new MarbleColor(r, g, b);
