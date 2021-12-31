@@ -25,7 +25,6 @@ public class MarbleClient
         modEventBus.addListener(MarbleClient::registerEntityRenderers);
         modEventBus.addListener(MarbleClient::registerEntityModels);
 
-        //Register GUIs
         MenuScreens.register(MarbleMenus.MARBLE.get(), MarbleColorItemScreen::new);
     }
 
