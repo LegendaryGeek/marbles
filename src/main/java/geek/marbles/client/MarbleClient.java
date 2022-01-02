@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
@@ -24,8 +25,11 @@ public class MarbleClient
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(MarbleClient::registerEntityRenderers);
         modEventBus.addListener(MarbleClient::registerEntityModels);
+        modEventBus.addListener(MarbleClient::registerScreens);
+    }
 
-        //Register GUIs
+    public static void registerScreens(FMLClientSetupEvent event)
+    {
         MenuScreens.register(MarbleMenus.MARBLE.get(), MarbleColorItemScreen::new);
     }
 
